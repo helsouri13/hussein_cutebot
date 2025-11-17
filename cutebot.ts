@@ -5,6 +5,7 @@
 namespace cuteBot {
     const STM8_ADDRESSS = 0x10
     let IR_Val = 0
+    let IR_Address = 0
     let _initEvents = true
     /**
     * Unit of Ultrasound Module
@@ -489,6 +490,7 @@ namespace cuteBot {
         pins.setPull(DigitalPin.P16, PinPullMode.PullUp)
         basic.forever(() => {
             IR_Val = irCode()
+            IR_Address = irAddr()
             if ((IR_Val == 0xff00 || (IR_Val & 0x00ff) == IRButtons.Eight
                 || (IR_Val & 0x00ff) == IRButtons.Nine
                 || (IR_Val & 0x00ff) == IRButtons.Menu

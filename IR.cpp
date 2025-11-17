@@ -98,6 +98,11 @@ int irCode(){
     return data;
 }
 
+int irAddr(){
+    remote_decode();
+    return ir_addr;
+}
+
 //%
 int readPulseIn(int status){
   uint32_t lasttime,nowtime,temp;
