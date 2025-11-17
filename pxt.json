@@ -1,7 +1,7 @@
 {
-    "name": "cutebot",
-    "version": "6.2.4",
-    "description": "ELECFREAKS cutebot car",
+    "name": "cutebot_2",
+    "version": "6.2.5",
+    "description": "Modified ELECFREAKS cutebot car",
     "license": "MIT",
     "dependencies": {
         "core": "*",
