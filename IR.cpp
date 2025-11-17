@@ -7,17 +7,17 @@ int ir_code = 0x00;
 int ir_addr = 0x00;
 int data;
 
-int logic_value(){//判断逻辑值"0"和"1"子函数
+int logic_value(){// Subfunction to determine logical value "0" or "1"
     uint32_t lasttime = system_timer_current_time_us();
     uint32_t nowtime;
-    while(!uBit.io.P16.getDigitalValue());//低等待
+    while(!uBit.io.P16.getDigitalValue());// wait while pin is low
     nowtime = system_timer_current_time_us();
-    if((nowtime - lasttime) > 350 && (nowtime - lasttime) < 850){//低电平560us
-        while(uBit.io.P16.getDigitalValue());//是高就等待
+    if((nowtime - lasttime) > 350 && (nowtime - lasttime) < 850){// low-level ~560us
+        while(uBit.io.P16.getDigitalValue());// wait while pin is high
         lasttime = system_timer_current_time_us();
-        if((lasttime - nowtime)>350 && (lasttime - nowtime) < 850){//接着高电平560us
+        if((lasttime - nowtime)>350 && (lasttime - nowtime) < 850){// then high-level ~560us
             return 0;
-        }else if((lasttime - nowtime)>1350 && (lasttime - nowtime) < 1950){//接着高电平1.7ms
+        }else if((lasttime - nowtime)>1350 && (lasttime - nowtime) < 1950){// then high-level ~1.7ms
             return 1;
        }
     }
@@ -27,7 +27,7 @@ int logic_value(){//判断逻辑值"0"和"1"子函数
 void pulse_deal(){
     int i;
     int num;
-    ir_addr=0x00;//清零
+    ir_addr=0x00;// clear address
     for(i=0; i<16;i++ )
     {
         num = logic_value();
@@ -39,8 +39,8 @@ void pulse_deal(){
             break;
         }
     }
-    //解析遥控器编码中的command指令
-    ir_code=0x00;//清零
+    // Parse the command field from the remote control code
+    ir_code=0x00;// clear code
     for(i=0; i<16;i++ )
     {
         num = logic_value();
@@ -61,27 +61,27 @@ void remote_decode(void){
     data = 0x00;
     uint32_t lasttime = system_timer_current_time_us();
     uint32_t nowtime;
-    while(uBit.io.P16.getDigitalValue()){//高电平等待
+    while(uBit.io.P16.getDigitalValue()){// wait while pin is high
         nowtime = system_timer_current_time_us();
-        if((nowtime - lasttime) > 100000){//超过100 ms,表明此时没有按键按下
+        if((nowtime - lasttime) > 100000){// exceeds 100 ms — no key pressed
             ir_code = 0xffff;
             return;
         }
     }
-    //如果高电平持续时间不超过100ms
+    // If the high-level duration does not exceed 100 ms
     lasttime = system_timer_current_time_us();
-    while(!uBit.io.P16.getDigitalValue());//低等待
+    while(!uBit.io.P16.getDigitalValue());// wait while pin is low
     nowtime = system_timer_current_time_us();
-    if((nowtime - lasttime) < 10000 && (nowtime - lasttime) > 5000){//9ms
-        while(uBit.io.P16.getDigitalValue());//高等待
+    if((nowtime - lasttime) < 10000 && (nowtime - lasttime) > 5000){// ~9 ms (start pulse)
+        while(uBit.io.P16.getDigitalValue());// wait while pin is high
         lasttime = system_timer_current_time_us();
-        if((lasttime - nowtime) > 4000 && (lasttime - nowtime) < 5000){//4.5ms,接收到了红外协议头且是新发送的数据。开始解析逻辑0和1
+        if((lasttime - nowtime) > 4000 && (lasttime - nowtime) < 5000){// ~4.5 ms — received IR header for new data; start parsing logical 0 and 1
             pulse_deal();
             //uBit.serial.printf("addr=0x%X,code = 0x%X\r\n",ir_addr,ir_code);
             data = ir_code;
             return;//ir_code;
-        }else if((lasttime - nowtime) > 2000 && (lasttime - nowtime) < 2500){//2.25ms,表示发的跟上一个包一致
-            while(!uBit.io.P16.getDigitalValue());//低等待
+        }else if((lasttime - nowtime) > 2000 && (lasttime - nowtime) < 2500){// ~2.25 ms — indicates repeat of previous packet
+            while(!uBit.io.P16.getDigitalValue());// wait while pin is low
             nowtime = system_timer_current_time_us();
             if((nowtime - lasttime) > 500 && (nowtime - lasttime) < 700){//560us
                 //uBit.serial.printf("addr=0x%X,code = 0x%X\r\n",ir_addr,ir_code);
