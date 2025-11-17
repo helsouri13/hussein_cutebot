@@ -541,4 +541,8 @@ namespace cuteBot {
         }
     }
 
+    export function returnIRAddr(): number {
+        return IR_Address;
+    }
+
 }
