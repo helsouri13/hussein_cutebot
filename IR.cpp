@@ -77,14 +77,14 @@ void remote_decode(void){
         lasttime = system_timer_current_time_us();
         if((lasttime - nowtime) > 4000 && (lasttime - nowtime) < 5000){// ~4.5 ms — received IR header for new data; start parsing logical 0 and 1
             pulse_deal();
-            //uBit.serial.printf("addr=0x%X,code = 0x%X\r\n",ir_addr,ir_code);
+            uBit.serial.printf("addr=0x%X,code = 0x%X\r\n",ir_addr,ir_code);
             data = ir_code;
             return;//ir_code;
         }else if((lasttime - nowtime) > 2000 && (lasttime - nowtime) < 2500){// ~2.25 ms — indicates repeat of previous packet
             while(!uBit.io.P16.getDigitalValue());// wait while pin is low
             nowtime = system_timer_current_time_us();
             if((nowtime - lasttime) > 500 && (nowtime - lasttime) < 700){//560us
-                //uBit.serial.printf("addr=0x%X,code = 0x%X\r\n",ir_addr,ir_code);
+                uBit.serial.printf("repeat packet addr=0x%X,code = 0x%X\r\n",ir_addr,ir_code);
                 data = ir_code;
                 return;//ir_code;
             }
