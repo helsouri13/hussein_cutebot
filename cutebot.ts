@@ -483,6 +483,11 @@ namespace cuteBot {
         return 0;
     }
 
+    //% shim=IRV2::irAddr
+    function irAddr(): number {
+        return 0;
+    }
+
     let IR_handling_flag = false
     //% weight=25
     //% block="On IR receiving"
