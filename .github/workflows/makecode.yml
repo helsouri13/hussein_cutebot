@@ -26,6 +26,6 @@ jobs:
       - name: build
         run: |
           pxt install
-          pxt build --cloud
+          pxt build
         env:
           CI: true
